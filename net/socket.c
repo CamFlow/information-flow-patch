@@ -2260,7 +2260,7 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 			err = ___sys_recvmsg(sock, (struct user_msghdr __user *)compat_entry,
 					     &msg_sys, flags & ~MSG_WAITFORONE,
-					     0);
+					     0); // if 0 call security hook
 #else
 			err = ___sys_recvmsg(sock, (struct user_msghdr __user *)compat_entry,
 				 				&msg_sys, flags & ~MSG_WAITFORONE,
@@ -2275,7 +2275,7 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 			err = ___sys_recvmsg(sock,
 					     (struct user_msghdr __user *)entry,
 					     &msg_sys, flags & ~MSG_WAITFORONE,
-					     0);
+					     0); // if 0 call security hook
 #else
 			 err = ___sys_recvmsg(sock,
 						     (struct user_msghdr __user *)entry,
