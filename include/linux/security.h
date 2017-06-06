@@ -307,6 +307,9 @@ int security_file_send_sigiotask(struct task_struct *tsk,
 				 struct fown_struct *fown, int sig);
 int security_file_receive(struct file *file);
 int security_file_open(struct file *file, const struct cred *cred);
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
+#endif
 int security_task_create(unsigned long clone_flags);
 void security_task_free(struct task_struct *task);
 int security_cred_alloc_blank(struct cred *cred, gfp_t gfp);
@@ -869,6 +872,14 @@ static inline int security_file_open(struct file *file,
 {
 	return 0;
 }
+
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+static inline int security_file_splice_pipe_to_pipe(struct file *in,
+						    struct file *out)
+{
+	return 0;
+}
+#endif
 
 static inline int security_task_create(unsigned long clone_flags)
 {
