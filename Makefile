@@ -10,8 +10,11 @@ prepare_kernel:
 	cd ./build && wget https://www.kernel.org/pub/linux/kernel/v4.x/linux-$(kernel-version).tar.xz && tar -xJf linux-$(kernel-version).tar.xz && cd ./linux-$(kernel-version) && $(MAKE) mrproper
 
 copy_change:
-	cd ./build/linux-$(kernel-version) && cp -r ../../security .
+	cd ./build/linux-$(kernel-version) && cp -r ../../fs .
 	cd ./build/linux-$(kernel-version) && cp -r ../../include .
+	cd ./build/linux-$(kernel-version) && cp -r ../../ipc .
+	cd ./build/linux-$(kernel-version) && cp -r ../../net .
+	cd ./build/linux-$(kernel-version) && cp -r ../../security .
 
 copy_config:
 	cp -f /boot/config-$(shell uname -r) .config
