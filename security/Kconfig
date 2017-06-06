@@ -194,7 +194,7 @@ config STATIC_USERMODEHELPER_PATH
 	  specify an empty string here (i.e. "").
 
 config SECURITY_FLOW_FRIENDLY
-	bool "Add security hooks for information flow mechanisms."
+	bool "Security hooks for information flow mechanisms."
 	default y
 	help
 		This option adds hooks to support information flow mechanisms. Some
