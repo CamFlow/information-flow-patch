@@ -75,4 +75,4 @@ patch: copy_change
 	cp -f ./build/patch-$(kernel-version)-flow-friendly ./output/patch-$(kernel-version)-flow-friendly
 
 prepare_release_travis:
-	cp -f build/patch-$(kernel-version)-v$(lsm-version) patch
+	cp -f output/patch-$(kernel-version)-flow-friendly patch

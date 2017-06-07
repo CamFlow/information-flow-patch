@@ -14,3 +14,14 @@ make patch
 ```
 
 The generated patch can be found in /output.
+
+# Build Status
+
+| Branch | Status                                                                                  |
+|--------|-----------------------------------------------------------------------------------------|
+| master | [![Master Build Status](https://api.travis-ci.org/CamFlow/information-flow-patch.svg?branch=master)](https://travis-ci.org/CamFlow/information-flow-patch/branches)  |
+| dev    | [![Dev Build Status](https://api.travis-ci.org/CamFlow/information-flow-patch.svg?branch=dev)](https://travis-ci.org/CamFlow/information-flow-patch/branches)      |
+
+Automated Travis test run the following operation:
+- Generate the patch.
+- Verify that the kernel build.
