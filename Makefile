@@ -71,6 +71,8 @@ patch: copy_change
 	cd ./build/linux-$(kernel-version) && $(MAKE) clean
 	cd ./build/linux-$(kernel-version) && $(MAKE) mrproper
 	cd ./build && diff -uprN -b -B ./pristine/linux-$(kernel-version) ./linux-$(kernel-version) > ./patch-$(kernel-version)-flow-friendly; [ $$? -eq 1 ]
+	mkdir -p output
+	cp -f ./build/patch-$(kernel-version)-flow-friendly ./output/patch-$(kernel-version)-flow-friendly
 
 prepare_release_travis:
 	cp -f build/patch-$(kernel-version)-v$(lsm-version) patch
