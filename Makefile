@@ -13,6 +13,7 @@ copy_change:
 	cd ./build/linux-$(kernel-version) && cp -r ../../fs .
 	cd ./build/linux-$(kernel-version) && cp -r ../../include .
 	cd ./build/linux-$(kernel-version) && cp -r ../../ipc .
+	cd ./build/linux-$(kernel-version) && cp -r ../../mm .
 	cd ./build/linux-$(kernel-version) && cp -r ../../net .
 	cd ./build/linux-$(kernel-version) && cp -r ../../security .
 
