@@ -5,7 +5,7 @@ Implement the changes to LSM suggested in the [paper](http://dl.acm.org/citation
 
 The original patches can be found on the authors [website](http://kayrebt.gforge.inria.fr/pathexaminer.html). Further changes have been made to those patches.
 
-To generate the patches:
+To generate the patch:
 ```
 git clone https://github.com/camflow/information-flow-patch
 cd ./information-flow-patch
