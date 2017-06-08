@@ -1844,11 +1844,9 @@ struct security_hook_heads {
 	struct list_head socket_listen;
 	struct list_head socket_accept;
 	struct list_head socket_sendmsg;
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	struct list_head socket_sendmsg_always;
-#endif
 	struct list_head socket_recvmsg;
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+	struct list_head socket_sendmsg_always;
 	struct list_head socket_recvmsg_always;
 #endif
 	struct list_head socket_getsockname;
