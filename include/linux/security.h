@@ -1211,8 +1211,15 @@ int security_socket_connect(struct socket *sock, struct sockaddr *address, int a
 int security_socket_listen(struct socket *sock, int backlog);
 int security_socket_accept(struct socket *sock, struct socket *newsock);
 int security_socket_sendmsg(struct socket *sock, struct msghdr *msg, int size);
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg, int size);
+#endif
 int security_socket_recvmsg(struct socket *sock, struct msghdr *msg,
 			    int size, int flags);
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
+			    int size, int flags);
+#endif
 int security_socket_getsockname(struct socket *sock);
 int security_socket_getpeername(struct socket *sock);
 int security_socket_getsockopt(struct socket *sock, int level, int optname);
@@ -1303,12 +1310,29 @@ static inline int security_socket_sendmsg(struct socket *sock,
 	return 0;
 }
 
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+static inline int security_socket_sendmsg_always(struct socket *sock,
+					  struct msghdr *msg, int size)
+{
+	return 0;
+}
+#endif
+
 static inline int security_socket_recvmsg(struct socket *sock,
 					  struct msghdr *msg, int size,
 					  int flags)
 {
 	return 0;
 }
+
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+static inline int security_socket_recvmsg_always(struct socket *sock,
+					  struct msghdr *msg, int size,
+					  int flags)
+{
+	return 0;
+}
+#endif
 
 static inline int security_socket_getsockname(struct socket *sock)
 {
