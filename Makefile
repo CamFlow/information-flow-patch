@@ -1,4 +1,4 @@
-kernel-version=4.11.3
+kernel-version=4.11.4
 arch=x86_64
 
 all: config compile
@@ -44,7 +44,7 @@ install: install_kernel
 install_kernel:
 	cd ./build/linux-$(kernel-version) && sudo $(MAKE) modules_install
 	cd ./build/linux-$(kernel-version) && sudo $(MAKE) install
-	cd ./build/linux-$(kernel-version) && sudo cp -f .config /boot/config-$(kernel-version)camflow-$(lsm-version)
+	cd ./build/linux-$(kernel-version) && sudo cp -f .config /boot/config-$(kernel-version)
 
 clean: clean_kernel
 
@@ -65,7 +65,7 @@ patch: copy_change
 	cd build/linux-$(kernel-version) && rm -f certs/x509.genkey
 	cd build/linux-$(kernel-version) && rm -f certs/signing_key.x509
 	cd build/linux-$(kernel-version) && rm -f tools/objtool/arch/x86/insn/inat-tables.c
-	cd build && rm -f patch-$(kernel-version)-v$(lsm-version)
+	cd build && rm -f patch-$(kernel-version)-information-flow
 	cd build/pristine/linux-$(kernel-version) && $(MAKE) clean
 	cd build/pristine/linux-$(kernel-version) && $(MAKE) mrproper
 	cd ./build/linux-$(kernel-version) && $(MAKE) clean

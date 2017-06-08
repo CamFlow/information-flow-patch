@@ -630,7 +630,12 @@ EXPORT_SYMBOL(__sock_tx_timestamp);
 
 static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
 {
-	int ret = sock->ops->sendmsg(sock, msg, msg_data_left(msg));
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+	int ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
+	if(ret)
+		return ret;
+#endif
+	ret = sock->ops->sendmsg(sock, msg, msg_data_left(msg));
 	BUG_ON(ret == -EIOCBQUEUED);
 	return ret;
 }
@@ -748,6 +753,11 @@ EXPORT_SYMBOL_GPL(__sock_recv_ts_and_drops);
 static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
 				     int flags)
 {
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+	int err = security_socket_recvmsg_always(sock, msg, msg_data_left(msg), flags);
+	if(err)
+		return err;
+#endif
 	return sock->ops->recvmsg(sock, msg, msg_data_left(msg), flags);
 }
 
@@ -1987,7 +1997,6 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
 	 * used_address->name_len is initialized to UINT_MAX so that the first
 	 * destination address never matches.
 	 */
-#ifndef CONFIG_SECURITY_FLOW_FRIENDLY
 	if (used_address && msg_sys->msg_name &&
 	    used_address->name_len == msg_sys->msg_namelen &&
 	    !memcmp(&used_address->name, msg_sys->msg_name,
@@ -1995,21 +2004,19 @@ static int ___sys_sendmsg(struct socket *sock, struct user_msghdr __user *msg,
 		err = sock_sendmsg_nosec(sock, msg_sys);
 		goto out_freectl;
 	}
-#endif
 	err = sock_sendmsg(sock, msg_sys);
 
 	/*
 	 * If this is sendmmsg() and sending to current destination address was
 	 * successful, remember it.
 	 */
-#ifndef CONFIG_SECURITY_FLOW_FRIENDLY
 	if (used_address && err >= 0) {
 		used_address->name_len = msg_sys->msg_namelen;
 		if (msg_sys->msg_name)
 			memcpy(&used_address->name, msg_sys->msg_name,
 			       used_address->name_len);
 	}
-#endif
+
 out_freectl:
 	if (ctl_buf != ctl)
 		sock_kfree_s(sock->sk, ctl_buf, ctl_len);
