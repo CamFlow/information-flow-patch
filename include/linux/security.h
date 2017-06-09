@@ -294,10 +294,6 @@ int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 int security_mmap_file(struct file *file, unsigned long prot,
 			unsigned long flags);
 int security_mmap_addr(unsigned long addr);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-void security_mmap_munmap(struct mm_struct *mm, struct vm_area_struct *vma,
-			  unsigned long start, unsigned long end);
-#endif
 int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
 			   unsigned long prot);
 int security_file_lock(struct file *file, unsigned int cmd);
@@ -307,9 +303,6 @@ int security_file_send_sigiotask(struct task_struct *tsk,
 				 struct fown_struct *fown, int sig);
 int security_file_receive(struct file *file);
 int security_file_open(struct file *file, const struct cred *cred);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
-#endif
 int security_task_create(unsigned long clone_flags);
 void security_task_free(struct task_struct *task);
 int security_cred_alloc_blank(struct cred *cred, gfp_t gfp);
@@ -353,20 +346,11 @@ int security_msg_queue_msgsnd(struct msg_queue *msq,
 			      struct msg_msg *msg, int msqflg);
 int security_msg_queue_msgrcv(struct msg_queue *msq, struct msg_msg *msg,
 			      struct task_struct *target, long type, int mode);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-int security_mq_timedsend(struct file *mq, size_t msg_len,
-		          unsigned long msg_prio, struct timespec *ts);
-int security_mq_timedreceive(struct file *mq, size_t msg_len,
-		             struct timespec *ts);
-#endif
 int security_shm_alloc(struct shmid_kernel *shp);
 void security_shm_free(struct shmid_kernel *shp);
 int security_shm_associate(struct shmid_kernel *shp, int shmflg);
 int security_shm_shmctl(struct shmid_kernel *shp, int cmd);
 int security_shm_shmat(struct shmid_kernel *shp, char __user *shmaddr, int shmflg);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-void security_shm_shmdt(struct shmid_kernel *shp);
-#endif
 int security_sem_alloc(struct sem_array *sma);
 void security_sem_free(struct sem_array *sma);
 int security_sem_associate(struct sem_array *sma, int semflg);
@@ -386,6 +370,21 @@ void security_inode_invalidate_secctx(struct inode *inode);
 int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
 int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
 int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
+
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+void security_shm_shmdt(struct shmid_kernel *shp);
+int security_mq_timedsend(struct file *mq, size_t msg_len,
+		          unsigned long msg_prio, struct timespec *ts);
+int security_mq_timedreceive(struct file *mq, size_t msg_len,
+		             struct timespec *ts);
+int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg,
+					int size);
+int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
+			    int size, int flags);
+void security_mmap_munmap(struct mm_struct *mm, struct vm_area_struct *vma,
+			  unsigned long start, unsigned long end);
+int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
+#endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #else /* CONFIG_SECURITY */
 struct security_mnt_opts {
 };
@@ -825,13 +824,6 @@ static inline int security_mmap_addr(unsigned long addr)
 	return cap_mmap_addr(addr);
 }
 
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline void security_mmap_munmap(struct mm_struct *mm,
-					struct vm_area_struct *vma,
-					unsigned long start, unsigned long end)
-{ }
-#endif
-
 static inline int security_file_mprotect(struct vm_area_struct *vma,
 					 unsigned long reqprot,
 					 unsigned long prot)
@@ -872,14 +864,6 @@ static inline int security_file_open(struct file *file,
 {
 	return 0;
 }
-
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline int security_file_splice_pipe_to_pipe(struct file *in,
-						    struct file *out)
-{
-	return 0;
-}
-#endif
 
 static inline int security_task_create(unsigned long clone_flags)
 {
@@ -1072,21 +1056,6 @@ static inline int security_msg_queue_msgrcv(struct msg_queue *msq,
 	return 0;
 }
 
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline int security_mq_timedsend(struct file *mq, size_t msg_len,
-					unsigned long msg_prio,
-					struct timespec *ts)
-{
-	return 0;
-}
-
-static inline int security_mq_timedreceive(struct file *mq, size_t msg_len,
-					   struct timespec *ts)
-{
-	return 0;
-}
-#endif
-
 static inline int security_shm_alloc(struct shmid_kernel *shp)
 {
 	return 0;
@@ -1111,11 +1080,6 @@ static inline int security_shm_shmat(struct shmid_kernel *shp,
 {
 	return 0;
 }
-
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline void security_shm_shmdt(struct shmid_kernel *shp)
-{ }
-#endif
 
 static inline int security_sem_alloc(struct sem_array *sma)
 {
@@ -1211,15 +1175,8 @@ int security_socket_connect(struct socket *sock, struct sockaddr *address, int a
 int security_socket_listen(struct socket *sock, int backlog);
 int security_socket_accept(struct socket *sock, struct socket *newsock);
 int security_socket_sendmsg(struct socket *sock, struct msghdr *msg, int size);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg, int size);
-#endif
 int security_socket_recvmsg(struct socket *sock, struct msghdr *msg,
 			    int size, int flags);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
-			    int size, int flags);
-#endif
 int security_socket_getsockname(struct socket *sock);
 int security_socket_getpeername(struct socket *sock);
 int security_socket_getsockopt(struct socket *sock, int level, int optname);
@@ -1310,29 +1267,12 @@ static inline int security_socket_sendmsg(struct socket *sock,
 	return 0;
 }
 
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline int security_socket_sendmsg_always(struct socket *sock,
-					  struct msghdr *msg, int size)
-{
-	return 0;
-}
-#endif
-
 static inline int security_socket_recvmsg(struct socket *sock,
 					  struct msghdr *msg, int size,
 					  int flags)
 {
 	return 0;
 }
-
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-static inline int security_socket_recvmsg_always(struct socket *sock,
-					  struct msghdr *msg, int size,
-					  int flags)
-{
-	return 0;
-}
-#endif
 
 static inline int security_socket_getsockname(struct socket *sock)
 {
@@ -1751,6 +1691,48 @@ static inline char *alloc_secdata(void)
 
 static inline void free_secdata(void *secdata)
 { }
+
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+static inline void security_mmap_munmap(struct mm_struct *mm,
+					struct vm_area_struct *vma,
+					unsigned long start, unsigned long end)
+{ }
+
+static inline int security_file_splice_pipe_to_pipe(struct file *in,
+						    struct file *out)
+{
+	return 0;
+}
+
+static inline int security_mq_timedsend(struct file *mq, size_t msg_len,
+					unsigned long msg_prio,
+					struct timespec *ts)
+{
+	return 0;
+}
+
+static inline int security_mq_timedreceive(struct file *mq, size_t msg_len,
+					   struct timespec *ts)
+{
+	return 0;
+}
+
+static inline void security_shm_shmdt(struct shmid_kernel *shp)
+{ }
+
+static inline int security_socket_sendmsg_always(struct socket *sock,
+					  struct msghdr *msg, int size)
+{
+	return 0;
+}
+
+static inline int security_socket_recvmsg_always(struct socket *sock,
+					  struct msghdr *msg, int size,
+					  int flags)
+{
+	return 0;
+}
+#endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #endif /* CONFIG_SECURITY */
 
 #endif /* ! __LINUX_SECURITY_H */
