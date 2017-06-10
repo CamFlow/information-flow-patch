@@ -1636,17 +1636,16 @@ int security_file_splice_pipe_to_pipe(struct file *in,
 	return call_int_hook(file_splice_pipe_to_pipe, 0, in, out);
 }
 
-int security_mq_timedsend(struct file *mq, size_t msg_len,
-					unsigned long msg_prio,
-					struct timespec *ts)
+int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
+				struct timespec *ts)
 {
-	return call_int_hook(mq_timedsend, 0, mq, msg_len, msg_prio, ts);
+	return call_int_hook(mq_timedsend, 0, inode, msg, ts);
 }
 
-int security_mq_timedreceive(struct file *mq, size_t msg_len,
-					   struct timespec *ts)
+int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
+				struct timespec *ts)
 {
-	return call_int_hook(mq_timedreceive, 0, mq, msg_len, ts);
+	return call_int_hook(mq_timedreceive, 0, inode, msg, ts);
 }
 
 void security_shm_shmdt(struct shmid_kernel *shp)

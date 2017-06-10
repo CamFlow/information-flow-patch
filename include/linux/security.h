@@ -373,14 +373,14 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
 
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 void security_shm_shmdt(struct shmid_kernel *shp);
-int security_mq_timedsend(struct file *mq, size_t msg_len,
-		          unsigned long msg_prio, struct timespec *ts);
-int security_mq_timedreceive(struct file *mq, size_t msg_len,
-		             struct timespec *ts);
+int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
+				struct timespec *ts);
+int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
+				struct timespec *ts);
 int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg,
-					int size);
+				int size);
 int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
-			    int size, int flags);
+			  int size, int flags);
 void security_mmap_munmap(struct mm_struct *mm, struct vm_area_struct *vma,
 			  unsigned long start, unsigned long end);
 int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
@@ -1704,15 +1704,14 @@ static inline int security_file_splice_pipe_to_pipe(struct file *in,
 	return 0;
 }
 
-static inline int security_mq_timedsend(struct file *mq, size_t msg_len,
-					unsigned long msg_prio,
-					struct timespec *ts)
+static inline int security_mq_timedsend(struct inode *inode,
+			struct msg_msg *msg, struct timespec *ts)
 {
 	return 0;
 }
 
-static inline int security_mq_timedreceive(struct file *mq, size_t msg_len,
-					   struct timespec *ts)
+static inline int security_mq_timedreceive(struct inode *inode,
+			struct msg_msg *msg, struct timespec *ts)
 {
 	return 0;
 }

@@ -1004,13 +1004,6 @@ SYSCALL_DEFINE5(mq_timedsend, mqd_t, mqdes, const char __user *, u_msg_ptr,
 		goto out_fput;
 	}
 
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	ret = security_mq_timedsend(f.file, msg_len, msg_prio,
-				timeout ? &ts : NULL);
-	if (ret)
-		goto out_fput;
-#endif
-
 	if (unlikely(msg_len > info->attr.mq_msgsize)) {
 		ret = -EMSGSIZE;
 		goto out_fput;
@@ -1025,6 +1018,12 @@ SYSCALL_DEFINE5(mq_timedsend, mqd_t, mqdes, const char __user *, u_msg_ptr,
 	}
 	msg_ptr->m_ts = msg_len;
 	msg_ptr->m_type = msg_prio;
+
+	#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+		ret = security_mq_timedsend(inode, msg_ptr, timeout ? &ts : NULL);
+		if (ret)
+			goto out_fput;
+	#endif
 
 	/*
 	 * msg_insert really wants us to have a valid, spare node struct so
@@ -1127,12 +1126,6 @@ SYSCALL_DEFINE5(mq_timedreceive, mqd_t, mqdes, char __user *, u_msg_ptr,
 		goto out_fput;
 	}
 
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	ret = security_mq_timedreceive(f.file, msg_len, timeout ? &ts : NULL);
-	if (ret)
-		goto out_fput;
-#endif
-
 	/* checks if buffer is big enough */
 	if (unlikely(msg_len < info->attr.mq_msgsize)) {
 		ret = -EMSGSIZE;
@@ -1182,7 +1175,13 @@ SYSCALL_DEFINE5(mq_timedreceive, mqd_t, mqdes, char __user *, u_msg_ptr,
 		ret = 0;
 	}
 	if (ret == 0) {
+#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+		ret = security_mq_timedreceive(inode, msg_ptr, timeout ? &ts : NULL);
+		if(!ret)
+			ret = msg_ptr->m_ts;
+#else
 		ret = msg_ptr->m_ts;
+#endif
 
 		if ((u_msg_prio && put_user(msg_ptr->m_type, u_msg_prio)) ||
 			store_msg(u_msg_ptr, msg_ptr, msg_ptr->m_ts)) {
