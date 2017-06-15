@@ -2264,31 +2264,18 @@ int __sys_recvmmsg(int fd, struct mmsghdr __user *mmsg, unsigned int vlen,
 		 * No need to ask LSM for more than the first datagram.
 		 */
 		if (MSG_CMSG_COMPAT & flags) {
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-			err = ___sys_recvmsg(sock, (struct user_msghdr __user *)compat_entry,
-					     &msg_sys, flags & ~MSG_WAITFORONE,
-					     0); // if 0 call security hook
-#else
 			err = ___sys_recvmsg(sock, (struct user_msghdr __user *)compat_entry,
 				 				&msg_sys, flags & ~MSG_WAITFORONE,
 				 				datagrams);
-#endif
 			if (err < 0)
 				break;
 			err = __put_user(err, &compat_entry->msg_len);
 			++compat_entry;
 		} else {
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-			err = ___sys_recvmsg(sock,
-					     (struct user_msghdr __user *)entry,
-					     &msg_sys, flags & ~MSG_WAITFORONE,
-					     0); // if 0 call security hook
-#else
 			 err = ___sys_recvmsg(sock,
 						     (struct user_msghdr __user *)entry,
 						     &msg_sys, flags & ~MSG_WAITFORONE,
 						     datagrams);
-#endif
 			if (err < 0)
 				break;
 			err = put_user(err, &entry->msg_len);
