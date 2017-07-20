@@ -1024,7 +1024,6 @@ SYSCALL_DEFINE5(mq_timedsend, mqd_t, mqdes, const char __user *, u_msg_ptr,
 		if (ret)
 			goto out_fput;
 	#endif
-
 	/*
 	 * msg_insert really wants us to have a valid, spare node struct so
 	 * it doesn't have to kmalloc a GFP_ATOMIC allocation, but it will
@@ -1177,8 +1176,10 @@ SYSCALL_DEFINE5(mq_timedreceive, mqd_t, mqdes, char __user *, u_msg_ptr,
 	if (ret == 0) {
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 		ret = security_mq_timedreceive(inode, msg_ptr, timeout ? &ts : NULL);
-		if(!ret)
-			ret = msg_ptr->m_ts;
+		if(!ret) {
+			free_msg(msg_ptr);
+			goto out_fput;
+		}
 #else
 		ret = msg_ptr->m_ts;
 #endif
@@ -1265,8 +1266,10 @@ retry:
 
 			timeo = MAX_SCHEDULE_TIMEOUT;
 			ret = netlink_attachskb(sock, nc, &timeo, NULL);
-			if (ret == 1)
+			if (ret == 1) {
+				sock = NULL;
 				goto retry;
+			}
 			if (ret) {
 				sock = NULL;
 				nc = NULL;
