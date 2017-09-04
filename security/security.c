@@ -1729,13 +1729,13 @@ int security_file_splice_pipe_to_pipe(struct file *in,
 }
 
 int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
-				struct timespec *ts)
+				size_t msg_len, struct timespec *ts)
 {
 	return call_int_hook(mq_timedsend, 0, inode, msg, ts);
 }
 
 int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
-				struct timespec *ts)
+				size_t msg_len, struct timespec *ts)
 {
 	return call_int_hook(mq_timedreceive, 0, inode, msg, ts);
 }

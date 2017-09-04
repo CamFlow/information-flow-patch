@@ -1020,7 +1020,7 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
 	msg_ptr->m_type = msg_prio;
 
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	ret = security_mq_timedsend(inode, msg_ptr, timeout ? &ts : NULL);
+	ret = security_mq_timedsend(inode, msg_ptr, msg_len, timeout ? ts : NULL);
 	if (ret)
 		goto out_fput;
 #endif
@@ -1172,7 +1172,7 @@ static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
 	}
 	if (ret == 0) {
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-		ret = security_mq_timedreceive(inode, msg_ptr, timeout ? &ts : NULL);
+		ret = security_mq_timedreceive(inode, msg_ptr, msg_len, timeout ? ts : NULL);
 		if(!ret) {
 			free_msg(msg_ptr);
 			goto out_fput;
