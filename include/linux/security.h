@@ -390,9 +390,9 @@ int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 void security_shm_shmdt(struct shmid_kernel *shp);
 int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
-				size_t msg_len, struct timespec *ts);
+				size_t msg_len, struct timespec64 *ts);
 int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
-				size_t msg_len, struct timespec *ts);
+				size_t msg_len, struct timespec64 *ts);
 int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg,
 				int size);
 int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
