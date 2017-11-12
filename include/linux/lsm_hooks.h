@@ -1689,9 +1689,9 @@ void (*mmap_munmap)(struct mm_struct *mm,
 int (*file_splice_pipe_to_pipe)(struct file *in,
 				struct file *out);
 int (*mq_timedsend)(struct inode *inode, struct msg_msg *msg,
-			struct timespec *ts);
+			struct timespec64 *ts);
 int (*mq_timedreceive)(struct inode *inode, struct msg_msg *msg,
-			struct timespec *ts);
+			struct timespec64 *ts);
 void (*shm_shmdt)(struct shmid_kernel *shp);
 int (*socket_sendmsg_always)(struct socket *sock, struct msghdr *msg,
 				int size);

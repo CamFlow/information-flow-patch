@@ -1779,13 +1779,13 @@ static inline int security_file_splice_pipe_to_pipe(struct file *in,
 }
 
 static inline int security_mq_timedsend(struct inode *inode,
-			struct msg_msg *msg, size_t msg_len, struct timespec *ts)
+			struct msg_msg *msg, size_t msg_len, struct timespec64 *ts)
 {
 	return 0;
 }
 
 static inline int security_mq_timedreceive(struct inode *inode,
-			struct msg_msg *msg, size_t msg_len, struct timespec *ts)
+			struct msg_msg *msg, size_t msg_len, struct timespec64 *ts)
 {
 	return 0;
 }
