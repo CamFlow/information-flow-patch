@@ -1,4 +1,4 @@
-kernel-version=4.13.12
+kernel-version=4.14
 arch=x86_64
 
 all: config compile

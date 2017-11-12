@@ -668,11 +668,11 @@ static void __do_notify(struct mqueue_inode_info *info)
 }
 
 static int prepare_timeout(const struct timespec __user *u_abs_timeout,
-			   struct timespec *ts)
+			   struct timespec64 *ts)
 {
-	if (copy_from_user(ts, u_abs_timeout, sizeof(struct timespec)))
+	if (get_timespec64(ts, u_abs_timeout))
 		return -EFAULT;
-	if (!timespec_valid(ts))
+	if (!timespec64_valid(ts))
 		return -EINVAL;
 	return 0;
 }
@@ -962,7 +962,7 @@ static inline void pipelined_receive(struct wake_q_head *wake_q,
 
 static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
 		size_t msg_len, unsigned int msg_prio,
-		struct timespec *ts)
+		struct timespec64 *ts)
 {
 	struct fd f;
 	struct inode *inode;
@@ -979,7 +979,7 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
 		return -EINVAL;
 
 	if (ts) {
-		expires = timespec_to_ktime(*ts);
+		expires = timespec64_to_ktime(*ts);
 		timeout = &expires;
 	}
 
@@ -1022,7 +1022,7 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 	ret = security_mq_timedsend(inode, msg_ptr, msg_len, timeout ? ts : NULL);
 	if (ret)
-		goto out_fput;
+		goto out_free;
 #endif
 	/*
 	 * msg_insert really wants us to have a valid, spare node struct so
@@ -1085,7 +1085,7 @@ out:
 
 static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
 		size_t msg_len, unsigned int __user *u_msg_prio,
-		struct timespec *ts)
+		struct timespec64 *ts)
 {
 	ssize_t ret;
 	struct msg_msg *msg_ptr;
@@ -1097,7 +1097,7 @@ static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
 	struct posix_msg_tree_node *new_leaf = NULL;
 
 	if (ts) {
-		expires = timespec_to_ktime(*ts);
+		expires = timespec64_to_ktime(*ts);
 		timeout = &expires;
 	}
 
@@ -1173,14 +1173,12 @@ static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
 	if (ret == 0) {
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 		ret = security_mq_timedreceive(inode, msg_ptr, msg_len, timeout ? ts : NULL);
-		if(!ret) {
+		if(ret) {
 			free_msg(msg_ptr);
 			goto out_fput;
 		}
-#else
-		ret = msg_ptr->m_ts;
 #endif
-
+		ret = msg_ptr->m_ts;
 		if ((u_msg_prio && put_user(msg_ptr->m_type, u_msg_prio)) ||
 			store_msg(u_msg_ptr, msg_ptr, msg_ptr->m_ts)) {
 			ret = -EFAULT;
@@ -1197,7 +1195,7 @@ SYSCALL_DEFINE5(mq_timedsend, mqd_t, mqdes, const char __user *, u_msg_ptr,
 		size_t, msg_len, unsigned int, msg_prio,
 		const struct timespec __user *, u_abs_timeout)
 {
-	struct timespec ts, *p = NULL;
+	struct timespec64 ts, *p = NULL;
 	if (u_abs_timeout) {
 		int res = prepare_timeout(u_abs_timeout, &ts);
 		if (res)
@@ -1211,7 +1209,7 @@ SYSCALL_DEFINE5(mq_timedreceive, mqd_t, mqdes, char __user *, u_msg_ptr,
 		size_t, msg_len, unsigned int __user *, u_msg_prio,
 		const struct timespec __user *, u_abs_timeout)
 {
-	struct timespec ts, *p = NULL;
+	struct timespec64 ts, *p = NULL;
 	if (u_abs_timeout) {
 		int res = prepare_timeout(u_abs_timeout, &ts);
 		if (res)
@@ -1488,11 +1486,11 @@ COMPAT_SYSCALL_DEFINE4(mq_open, const char __user *, u_name,
 }
 
 static int compat_prepare_timeout(const struct compat_timespec __user *p,
-				   struct timespec *ts)
+				   struct timespec64 *ts)
 {
-	if (compat_get_timespec(ts, p))
+	if (compat_get_timespec64(ts, p))
 		return -EFAULT;
-	if (!timespec_valid(ts))
+	if (!timespec64_valid(ts))
 		return -EINVAL;
 	return 0;
 }
@@ -1502,7 +1500,7 @@ COMPAT_SYSCALL_DEFINE5(mq_timedsend, mqd_t, mqdes,
 		       compat_size_t, msg_len, unsigned int, msg_prio,
 		       const struct compat_timespec __user *, u_abs_timeout)
 {
-	struct timespec ts, *p = NULL;
+	struct timespec64 ts, *p = NULL;
 	if (u_abs_timeout) {
 		int res = compat_prepare_timeout(u_abs_timeout, &ts);
 		if (res)
@@ -1517,7 +1515,7 @@ COMPAT_SYSCALL_DEFINE5(mq_timedreceive, mqd_t, mqdes,
 		       compat_size_t, msg_len, unsigned int __user *, u_msg_prio,
 		       const struct compat_timespec __user *, u_abs_timeout)
 {
-	struct timespec ts, *p = NULL;
+	struct timespec64 ts, *p = NULL;
 	if (u_abs_timeout) {
 		int res = compat_prepare_timeout(u_abs_timeout, &ts);
 		if (res)
