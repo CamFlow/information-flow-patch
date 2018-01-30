@@ -630,8 +630,9 @@ EXPORT_SYMBOL(__sock_tx_timestamp);
 
 static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
 {
+	int ret;
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	int ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
+	ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
 	if (ret)
 		return ret;
 #endif
