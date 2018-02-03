@@ -630,8 +630,9 @@ EXPORT_SYMBOL(__sock_tx_timestamp);
 
 static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
 {
+	int ret;
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	int ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
+	ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
 	if (ret)
 		return ret;
 #endif
@@ -2651,6 +2652,15 @@ out_fs:
 }
 
 core_initcall(sock_init);	/* early initcall */
+
+static int __init jit_init(void)
+{
+#ifdef CONFIG_BPF_JIT_ALWAYS_ON
+	bpf_jit_enable = 1;
+#endif
+	return 0;
+}
+pure_initcall(jit_init);
 
 #ifdef CONFIG_PROC_FS
 void socket_seq_show(struct seq_file *seq)

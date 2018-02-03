@@ -1,4 +1,4 @@
-kernel-version=4.14.15
+kernel-version=4.14.16
 arch=x86_64
 
 all: config compile
@@ -33,6 +33,10 @@ config_travis: copy_change copy_config
 	cd ./build/linux-$(kernel-version) &&  mv config_strip .config
 	cd ./build/linux-$(kernel-version) && $(MAKE) olddefconfig
 	cd ./build/linux-$(kernel-version) && $(MAKE) oldconfig
+
+config_travis_off:
+	cd ./build/linux-$(kernel-version) && sed -i -e "s/CONFIG_SECURITY_FLOW_FRIENDLY=y/CONFIG_SECURITY_FLOW_FRIENDLY=n/g" .config
+	cd ./build/linux-$(kernel-version) &&$(MAKE) oldconfig
 
 compile: compile_kernel
 
