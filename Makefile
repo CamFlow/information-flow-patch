@@ -34,6 +34,10 @@ config_travis: copy_change copy_config
 	cd ./build/linux-$(kernel-version) && $(MAKE) olddefconfig
 	cd ./build/linux-$(kernel-version) && $(MAKE) oldconfig
 
+config_travis_off:
+	cd ./build/linux-$(kernel-version) && sed -i -e "s/CONFIG_SECURITY_FLOW_FRIENDLY=y/CONFIG_SECURITY_FLOW_FRIENDLY=n/g" .config
+	$(MAKE) oldconfig
+
 compile: compile_kernel
 
 compile_kernel: copy_change

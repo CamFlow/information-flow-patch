@@ -23,6 +23,8 @@ before_script:
 
 script:
   - make compile
+  - make config_travis_off
+  - make compile
 
 after_success:
   - make prepare_release_travis
