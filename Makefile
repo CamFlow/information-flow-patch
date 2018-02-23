@@ -41,7 +41,7 @@ config_travis_off:
 compile: compile_kernel
 
 compile_kernel: copy_change
-	cd ./build/linux-$(kernel-version) && $(MAKE) -j4
+	cd ./build/linux-$(kernel-version) && $(MAKE) -j16
 
 install: install_kernel
 
