@@ -9,6 +9,8 @@ prepare_kernel:
 	mkdir -p build
 	cd ./build && git clone -b v$(kernel-version) --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 	cd ./build/linux-stable && $(MAKE) mrproper
+	cd ./build && mkdir -p pristine
+	cd ./build && cp -r ./linux-stable ./pristine
 
 copy_change:
 	cd ./build/linux-stable && cp -r ../../fs .
@@ -61,8 +63,6 @@ delete_kernel:
 	cd ./build && rm -rf ./linux-stable
 
 patch: copy_change
-	cd build && mkdir -p pristine
-	cd build/pristine && git clone -b v$(kernel-version) --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 	cd build/linux-stable && rm -f .config
 	cd build/linux-stable && rm -f config_sav
 	cd build/linux-stable && rm -f certs/signing_key.pem
