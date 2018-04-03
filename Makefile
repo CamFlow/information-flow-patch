@@ -78,5 +78,8 @@ patch: copy_change
 	mkdir -p output
 	cp -f ./build/patch-$(kernel-version)-flow-friendly ./output/patch-$(kernel-version)-flow-friendly
 
+test_patch:
+	cd ./build/pristine/linux-stable && patch -p2 < ../../patch-$(kernel-version)-flow-friendly
+
 prepare_release_travis:
 	cp -f output/patch-$(kernel-version)-flow-friendly patch

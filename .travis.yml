@@ -25,6 +25,7 @@ script:
   - make compile
   - make config_travis_off
   - make compile
+  - make test_patch
 
 after_success:
   - make prepare_release_travis
