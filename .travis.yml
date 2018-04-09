@@ -26,6 +26,8 @@ before_script:
   - make config_travis
 
 script:
+  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
+  - gcc --version
   - make compile
   - make config_travis_off
   - make compile
