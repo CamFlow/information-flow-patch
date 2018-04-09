@@ -3,10 +3,11 @@ sudo: required
 language: c
 
 addons:
-  sonarqube:
-    branches:
-      - master
-      - dev
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-8
 
 before_install:
   - sudo apt-get update -qq
