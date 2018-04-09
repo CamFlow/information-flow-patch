@@ -46,6 +46,9 @@ compile: compile_kernel
 compile_kernel: copy_change
 	cd ./build/linux-stable && $(MAKE) -j16
 
+compile_security: copy_change
+	cd ./build/linux-stable && $(MAKE) security W=1 -j16
+
 install: install_kernel
 
 install_kernel:
