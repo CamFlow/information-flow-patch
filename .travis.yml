@@ -9,7 +9,7 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     # install toolchains
-    - gcc-8
+    - gcc-7
 
 before_install:
   - sudo apt-get update -qq
@@ -24,7 +24,7 @@ before_script:
   - make patch
 
 script:
-  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-8 /usr/bin/gcc
+  - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-7 /usr/bin/gcc
   - gcc --version
   - make config_travis
   - make compile
