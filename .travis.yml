@@ -23,11 +23,11 @@ before_install:
 before_script:
   - make prepare_kernel
   - make patch
-  - make config_travis
 
 script:
   - sudo unlink /usr/bin/gcc && sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - gcc --version
+  - make config_travis
   - make compile
   - make config_travis_off
   - make compile
