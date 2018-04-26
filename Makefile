@@ -1,4 +1,4 @@
-kernel-version=4.16.3
+kernel-version=4.16.5
 arch=x86_64
 
 all: config compile
@@ -64,6 +64,7 @@ clean_kernel:
 
 delete_kernel:
 	cd ./build && rm -rf ./linux-stable
+	cd ./build && rm -rf ./pristine
 
 patch: copy_change
 	cd build/linux-stable && rm -f .config
