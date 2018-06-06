@@ -387,7 +387,7 @@ int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
 int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
 int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-void security_shm_shmdt(struct shmid_kernel *shp);
+void security_shm_shmdt(struct kern_ipc_perm *shp);
 int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
 				size_t msg_len, struct timespec64 *ts);
 int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
@@ -1861,7 +1861,7 @@ static inline int security_mq_timedreceive(struct inode *inode,
 	return 0;
 }
 
-static inline void security_shm_shmdt(struct shmid_kernel *shp)
+static inline void security_shm_shmdt(struct kern_ipc_perm *shp)
 { }
 
 static inline int security_socket_sendmsg_always(struct socket *sock,

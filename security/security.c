@@ -1766,7 +1766,7 @@ int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
 	return call_int_hook(mq_timedreceive, 0, inode, msg, ts);
 }
 
-void security_shm_shmdt(struct shmid_kernel *shp)
+void security_shm_shmdt(struct kern_ipc_perm *shp)
 {
 	call_void_hook(shm_shmdt, shp);
 }

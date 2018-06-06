@@ -327,7 +327,7 @@ static void shm_close(struct vm_area_struct *vma)
 	/* the security module return value is ignored, the purpose of this hook
 	 * is only to let the module know the memory segment is being detached
 	 */
-	security_shm_shmdt(shp);
+	security_shm_shmdt(shp->shm_perm);
 #endif
 
 	if (shm_may_destroy(ns, shp))

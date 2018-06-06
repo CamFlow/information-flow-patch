@@ -1766,7 +1766,7 @@ union security_list_options {
   			struct timespec64 *ts);
   int (*mq_timedreceive)(struct inode *inode, struct msg_msg *msg,
   			struct timespec64 *ts);
-  void (*shm_shmdt)(struct shmid_kernel *shp);
+  void (*shm_shmdt)(struct kern_ipc_perm *shp);
   int (*socket_sendmsg_always)(struct socket *sock, struct msghdr *msg,
   				int size);
   int (*socket_recvmsg_always)(struct socket *sock, struct msghdr *msg,
