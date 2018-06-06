@@ -1348,8 +1348,8 @@ static long vmsplice_to_pipe(struct file *file, const struct iovec __user *uiov,
  * Currently we punt and implement it as a normal copy, see pipe_to_user().
  *
  */
-SYSCALL_DEFINE4(vmsplice, int, fd, const struct iovec __user *, iov,
-		unsigned long, nr_segs, unsigned int, flags)
+static long do_vmsplice(int fd, const struct iovec __user *iov,
+			unsigned long nr_segs, unsigned int flags)
 {
 	struct fd f;
 	long error;
@@ -1375,6 +1375,12 @@ SYSCALL_DEFINE4(vmsplice, int, fd, const struct iovec __user *, iov,
 	return error;
 }
 
+SYSCALL_DEFINE4(vmsplice, int, fd, const struct iovec __user *, iov,
+		unsigned long, nr_segs, unsigned int, flags)
+{
+	return do_vmsplice(fd, iov, nr_segs, flags);
+}
+
 #ifdef CONFIG_COMPAT
 COMPAT_SYSCALL_DEFINE4(vmsplice, int, fd, const struct compat_iovec __user *, iov32,
 		    unsigned int, nr_segs, unsigned int, flags)
@@ -1392,7 +1398,7 @@ COMPAT_SYSCALL_DEFINE4(vmsplice, int, fd, const struct compat_iovec __user *, io
 		    put_user(v.iov_len, &iov[i].iov_len))
 			return -EFAULT;
 	}
-	return sys_vmsplice(fd, iov, nr_segs, flags);
+	return do_vmsplice(fd, iov, nr_segs, flags);
 }
 #endif
 
