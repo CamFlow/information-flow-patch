@@ -1857,7 +1857,7 @@ static inline void free_secdata(void *secdata)
 { }
 #endif /* CONFIG_SECURITY */
 
-#ifdef CONFIG_SECURITY
+#ifndef CONFIG_SECURITY
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 static inline void security_mmap_munmap(struct mm_struct *mm,
 					struct vm_area_struct *vma,
