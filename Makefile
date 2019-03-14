@@ -1,4 +1,4 @@
-kernel-version=5.0.1
+kernel-version=5.0.2
 arch=x86_64
 
 all: config compile
