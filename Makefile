@@ -1,4 +1,4 @@
-kernel-version=5.2.3
+kernel-version=5.2.4
 arch=x86_64
 
 all: config compile
@@ -54,7 +54,7 @@ install: install_kernel
 install_kernel:
 	cd ./build/linux-stable && sudo $(MAKE) modules_install
 	cd ./build/linux-stable && sudo $(MAKE) install
-	cd ./build/linux-stable && sudo cp -f .config /boot/config-$(kernel-version)
+	cd ./build/linux-stable && sudo cp -f .config /boot/config-$(kernel-version)heck
 
 clean: clean_kernel
 
