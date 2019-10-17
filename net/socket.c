@@ -635,10 +635,11 @@ INDIRECT_CALLABLE_DECLARE(int inet6_sendmsg(struct socket *, struct msghdr *,
 static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
 {
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	int ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
+	int ret;
+	ret = security_socket_sendmsg_always(sock, msg, msg_data_left(msg));
 	if (ret)
 		return ret;
-	int ret = INDIRECT_CALL_INET(sock->ops->sendmsg, inet6_sendmsg,
+	ret = INDIRECT_CALL_INET(sock->ops->sendmsg, inet6_sendmsg,
 				     inet_sendmsg, sock, msg,
 				     msg_data_left(msg));
 #else
