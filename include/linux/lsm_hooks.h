@@ -77,7 +77,7 @@
  *	state.  This is called immediately after commit_creds().
  *
  * Security hooks for mount using fs_context.
- *	[See also Documentation/filesystems/mounting.txt]
+ *	[See also Documentation/filesystems/mount_api.txt]
  *
  * @fs_context_dup:
  *	Allocate and attach a security structure to sc->security.  This pointer
@@ -2055,13 +2055,20 @@ struct security_hook_heads {
 	struct hlist_head audit_rule_free;
 #endif /* CONFIG_AUDIT */
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-	struct hlist_head mmap_munmap;
-	struct hlist_head file_splice_pipe_to_pipe;
-	struct hlist_head mq_timedsend;
-	struct hlist_head mq_timedreceive;
-	struct hlist_head shm_shmdt;
-	struct hlist_head socket_sendmsg_always;
-	struct hlist_head socket_recvmsg_always;
+  void (*mmap_munmap)(struct mm_struct *mm,
+  				struct vm_area_struct *vma,
+  				unsigned long start, unsigned long end);
+  int (*file_splice_pipe_to_pipe)(struct file *in,
+  				struct file *out);
+  int (*mq_timedsend)(struct inode *inode, struct msg_msg *msg,
+  			struct timespec64 *ts);
+  int (*mq_timedreceive)(struct inode *inode, struct msg_msg *msg,
+  			struct timespec64 *ts);
+  void (*shm_shmdt)(struct kern_ipc_perm *shp);
+  int (*socket_sendmsg_always)(struct socket *sock, struct msghdr *msg,
+  				int size);
+  int (*socket_recvmsg_always)(struct socket *sock, struct msghdr *msg,
+  				int size, int flags);
 #endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #ifdef CONFIG_BPF_SYSCALL
 	struct hlist_head bpf;

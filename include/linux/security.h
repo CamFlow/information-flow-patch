@@ -189,9 +189,9 @@ static inline const char *kernel_load_data_id_str(enum kernel_load_data_id id)
 
 #ifdef CONFIG_SECURITY
 
-int call_lsm_notifier(enum lsm_event event, void *data);
-int register_lsm_notifier(struct notifier_block *nb);
-int unregister_lsm_notifier(struct notifier_block *nb);
+int call_blocking_lsm_notifier(enum lsm_event event, void *data);
+int register_blocking_lsm_notifier(struct notifier_block *nb);
+int unregister_blocking_lsm_notifier(struct notifier_block *nb);
 
 /* prototypes */
 extern int security_init(void);
@@ -408,17 +408,17 @@ int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
 #endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #else /* CONFIG_SECURITY */
 
-static inline int call_lsm_notifier(enum lsm_event event, void *data)
+static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
 {
 	return 0;
 }
 
-static inline int register_lsm_notifier(struct notifier_block *nb)
+static inline int register_blocking_lsm_notifier(struct notifier_block *nb)
 {
 	return 0;
 }
 
-static inline  int unregister_lsm_notifier(struct notifier_block *nb)
+static inline  int unregister_blocking_lsm_notifier(struct notifier_block *nb)
 {
 	return 0;
 }
