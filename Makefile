@@ -78,12 +78,12 @@ patch: copy_change
 	cd build/linux-stable && $(MAKE) mrproper
 	cd build/linux-stable && git add .
 	cd build/linux-stable && git commit -a -m 'information flow'
-	cd build/linux-stable && git format-patch HEAD~~ -s
-	mkdir -p output
-	cd build/linux-stable && cp -f *.patch ../../output/
+	cd build/linux-stable && git format-patch HEAD~ -s
+	mkdir -p patches
+	cd build/linux-stable && cp -f *.patch ../../patches/
 
 test_patch:
-	cd ./build/pristine/linux-stable && git apply ../../../output/0002-information-flow.patch
+	cd ./build/pristine/linux-stable && git apply ../../../patches/0001-information-flow.patch
 
 prepare_release_travis:
-	cp -f output/patch-$(kernel-version)-flow-friendly patch
+	cp -f patches/patch-$(kernel-version)-flow-friendly patch
