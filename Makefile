@@ -73,17 +73,17 @@ patch: copy_change
 	cd build/linux-stable && rm -f certs/x509.genkey
 	cd build/linux-stable && rm -f certs/signing_key.x509
 	cd build/linux-stable && rm -f tools/objtool/arch/x86/insn/inat-tables.c
-	cd build && rm -f patch-$(kernel-version)-information-flow
-	cd build/pristine/linux-stable && $(MAKE) clean
-	cd build/pristine/linux-stable && $(MAKE) mrproper
-	cd ./build/linux-stable && $(MAKE) clean
-	cd ./build/linux-stable && $(MAKE) mrproper
-	cd ./build && diff -uprN -b -B ./pristine/linux-stable ./linux-stable > ./patch-$(kernel-version)-flow-friendly; [ $$? -eq 1 ]
+	cd build && rm -f flow.patch
+	cd build/linux-stable && $(MAKE) clean
+	cd build/linux-stable && $(MAKE) mrproper
+	cd build/linux-stable && git add .
+	cd build/linux-stable && git commit -a -m 'information flow'
+	cd build/linux-stable && git format-patch HEAD~~ -s
 	mkdir -p output
-	cp -f ./build/patch-$(kernel-version)-flow-friendly ./output/patch-$(kernel-version)-flow-friendly
+	cd build/linux-stable && cp -f *.patch ../../output/
 
 test_patch:
-	cd ./build/pristine/linux-stable && patch -p2 < ../../patch-$(kernel-version)-flow-friendly
+	cd ./build/pristine/linux-stable && git apply ../../../output/0002-information-flow.patch
 
 prepare_release_travis:
 	cp -f output/patch-$(kernel-version)-flow-friendly patch
