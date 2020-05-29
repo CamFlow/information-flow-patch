@@ -39,7 +39,7 @@ deploy:
   provider: releases
   api_key: "$GITHUB_KEY"
   file:
-    - patch
+    - output/0002-information-flow.patch
   skip_cleanup: true
   on:
     tags: true
