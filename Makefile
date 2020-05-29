@@ -84,6 +84,3 @@ patch: copy_change
 
 test_patch:
 	cd ./build/pristine/linux-stable && git apply ../../../patches/0001-information-flow.patch
-
-prepare_release_travis:
-	cp -f patches/patch-$(kernel-version)-flow-friendly patch

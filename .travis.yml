@@ -32,9 +32,6 @@ script:
   - make compile_security
   - make test_patch
 
-after_success:
-  - make prepare_release_travis
-
 deploy:
   provider: releases
   api_key: "$GITHUB_KEY"
