@@ -33,6 +33,7 @@ script:
   - make config_travis_off
   - make compile_security
   - make test_patch
+  - head patches/0001-information-flow.patch
 
 deploy:
   provider: releases
