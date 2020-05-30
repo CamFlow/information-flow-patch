@@ -447,20 +447,6 @@ int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
 int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
 int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
 int security_locked_down(enum lockdown_reason what);
-#ifdef CONFIG_SECURITY_FLOW_FRIENDLY
-void security_shm_shmdt(struct kern_ipc_perm *shp);
-int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
-				size_t msg_len, struct timespec64 *ts);
-int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
-				size_t msg_len, struct timespec64 *ts);
-int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg,
-				int size);
-int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
-			  int size, int flags);
-void security_mmap_munmap(struct mm_struct *mm, struct vm_area_struct *vma,
-			  unsigned long start, unsigned long end);
-int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
-#endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #else /* CONFIG_SECURITY */
 
 static inline int call_blocking_lsm_notifier(enum lsm_event event, void *data)
@@ -1913,8 +1899,21 @@ static inline void security_bpf_prog_free(struct bpf_prog_aux *aux)
 #endif /* CONFIG_SECURITY */
 #endif /* CONFIG_BPF_SYSCALL */
 
-#ifndef CONFIG_SECURITY
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
+#ifdef CONFIG_SECURITY
+void security_shm_shmdt(struct kern_ipc_perm *shp);
+int security_mq_timedsend(struct inode *inode, struct msg_msg *msg,
+				size_t msg_len, struct timespec64 *ts);
+int security_mq_timedreceive(struct inode *inode, struct msg_msg *msg,
+				size_t msg_len, struct timespec64 *ts);
+int security_socket_sendmsg_always(struct socket *sock, struct msghdr *msg,
+				int size);
+int security_socket_recvmsg_always(struct socket *sock, struct msghdr *msg,
+			  int size, int flags);
+void security_mmap_munmap(struct mm_struct *mm, struct vm_area_struct *vma,
+			  unsigned long start, unsigned long end);
+int security_file_splice_pipe_to_pipe(struct file *in, struct file *out);
+#else
 static inline void security_mmap_munmap(struct mm_struct *mm,
 					struct vm_area_struct *vma,
 					unsigned long start, unsigned long end)
@@ -1953,8 +1952,8 @@ static inline int security_socket_recvmsg_always(struct socket *sock,
 {
 	return 0;
 }
-#endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 #endif /* CONFIG_SECURITY */
+#endif /* CONFIG_SECURITY_FLOW_FRIENDLY */
 
 #ifdef CONFIG_PERF_EVENTS
 struct perf_event_attr;
