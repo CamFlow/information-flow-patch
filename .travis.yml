@@ -18,6 +18,8 @@ before_install:
   - sudo apt-get -y install libedit-dev libelf-dev sparse flawfinder bc patch libncurses-dev cmake clang git libssl-dev
 
 before_script:
+  - git config --global user.email $GH_EMAIL
+  - git config --global user.name $GH_NAME
   - make prepare_kernel
   - make patch
 
