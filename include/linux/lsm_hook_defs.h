@@ -360,7 +360,6 @@ LSM_HOOK(int, 0, audit_rule_match, u32 secid, u32 field, u32 op, void *lsmrule)
 LSM_HOOK(void, LSM_RET_VOID, audit_rule_free, void *lsmrule)
 #endif /* CONFIG_AUDIT */
 
-
 #ifdef CONFIG_SECURITY_FLOW_FRIENDLY
 LSM_HOOK(void, LSM_RET_VOID, mmap_munmap, struct mm_struct *mm,
 		struct vm_area_struct *vma, unsigned long start, unsigned long end)

@@ -12,6 +12,27 @@ prepare_kernel:
 	cd ~/build && mkdir -p pristine
 	cd ~/build && cp -r ./linux-stable ./pristine
 
+
+prepare_update:
+	mv fs/splice.c fs/_splice.c
+	cp ~/build/pristine/linux-stable/fs/splice.c fs/splice.c
+	mv include/linux/lsm_hook_defs.h include/linux/_lsm_hook_defs.h
+	cp ~/build/pristine/linux-stable/include/linux/lsm_hook_defs.h include/linux/lsm_hook_defs.h
+	mv include/linux/security.h include/linux/_security.h
+	cp ~/build/pristine/linux-stable/include/linux/security.h include/linux/security.h
+	mv ipc/mqueue.c ipc/_mqueue.c
+	cp ~/build/pristine/linux-stable/ipc/mqueue.c ipc/mqueue.c
+	mv ipc/shm.c ipc/_shm.c
+	cp ~/build/pristine/linux-stable/ipc/shm.c ipc/shm.c
+	mv mm/mmap.c mm/_mmap.c
+	cp ~/build/pristine/linux-stable/mm/mmap.c mm/mmap.c
+	mv net/socket.c net/_socket.c
+	cp ~/build/pristine/linux-stable/net/socket.c net/socket.c
+	mv security/Kconfig security/_Kconfig
+	cp ~/build/pristine/linux-stable/security/Kconfig security/Kconfig
+	mv security/security.c security/_security.c
+	cp ~/build/pristine/linux-stable/security/security.c security/security.c
+
 copy_change:
 	cp -rf ./fs ~/build/linux-stable
 	cp -rf ./include ~/build/linux-stable
