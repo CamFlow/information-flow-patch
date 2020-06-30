@@ -78,6 +78,7 @@ patch: copy_change
 	cd ~/build/linux-stable && git add .
 	cd ~/build/linux-stable && git commit -a -m 'information flow'
 	cd ~/build/linux-stable && git format-patch HEAD~ -s
+	rm -f ~/build/0001-information-flow.patch
 	mkdir -p patches
 	cp -f ~/build/linux-stable/*.patch patches/
 
