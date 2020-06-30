@@ -83,4 +83,5 @@ patch: copy_change
 	cp -f ~/build/linux-stable/*.patch patches/
 
 test_patch:
-	cd ~/build/pristine/linux-stable && git apply ../../../patches/0001-information-flow.patch
+	cp -f ./patches/0001-information-flow.patch ~/build/0001-information-flow.patch
+	cd ~/build/pristine/linux-stable && git apply ../../0001-information-flow.patch
