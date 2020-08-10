@@ -1,4 +1,4 @@
-kernel-version=5.7.7
+kernel-version=5.8
 arch=x86_64
 
 all: config compile
@@ -12,7 +12,7 @@ prepare_kernel:
 	cd ~/build && mkdir -p pristine
 	cd ~/build && cp -r ./linux-stable ./pristine
 
-prepare_update:
+prepare_update: prepare_kernel
 	mv fs/splice.c fs/_splice.c
 	cp ~/build/pristine/linux-stable/fs/splice.c fs/splice.c
 	mv include/linux/lsm_hook_defs.h include/linux/_lsm_hook_defs.h
