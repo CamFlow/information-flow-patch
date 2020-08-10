@@ -12,7 +12,6 @@ prepare_kernel:
 	cd ~/build && mkdir -p pristine
 	cd ~/build && cp -r ./linux-stable ./pristine
 
-
 prepare_update:
 	mv fs/splice.c fs/_splice.c
 	cp ~/build/pristine/linux-stable/fs/splice.c fs/splice.c
