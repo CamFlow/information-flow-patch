@@ -1,4 +1,4 @@
-kernel-version=5.9.11
+kernel-version=5.11.2
 arch=x86_64
 
 all: config compile
@@ -7,7 +7,7 @@ prepare: prepare_kernel
 
 prepare_kernel:
 	mkdir -p ~/build
-	cd ~/build && git clone -b v$(kernel-version) --single-branch git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+	cd ~/build && git clone -b v$(kernel-version) --single-branch --depth 1 git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
 	cd ~/build/linux-stable && $(MAKE) mrproper
 	cd ~/build && mkdir -p pristine
 	cd ~/build && cp -r ./linux-stable ./pristine
@@ -83,8 +83,8 @@ clean_kernel:
 	cd ~/build/linux-stable && $(MAKE) mrproper
 
 delete_kernel:
-	cd ~/build && rm -rf ./linux-stable
-	cd ~/build && rm -rf ./pristine
+	cd ~/build && sudo rm -rf ./linux-stable
+	cd ~/build && sudo rm -rf ./pristine
 
 patch: copy_change
 	cd ~/build/linux-stable && rm -f .config
