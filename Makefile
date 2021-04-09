@@ -50,14 +50,14 @@ config: copy_change copy_config
 	cd ~/build/linux-stable &&  mv config_strip .config
 	cd ~/build/linux-stable && $(MAKE) menuconfig
 
-config_travis: copy_change copy_config
+config_circle: copy_change copy_config
 	cd ~/build/linux-stable && ./scripts/kconfig/streamline_config.pl > config_strip
 	cd ~/build/linux-stable &&  mv .config config_sav
 	cd ~/build/linux-stable &&  mv config_strip .config
 	cd ~/build/linux-stable && $(MAKE) olddefconfig
 	cd ~/build/linux-stable && $(MAKE) oldconfig
 
-config_travis_off:
+config_circle_off: config_circle
 	cd ~/build/linux-stable && sed -i -e "s/CONFIG_SECURITY_FLOW_FRIENDLY=y/CONFIG_SECURITY_FLOW_FRIENDLY=n/g" .config
 	cd ~/build/linux-stable &&$(MAKE) oldconfig
 

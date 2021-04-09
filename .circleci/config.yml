@@ -1,8 +1,8 @@
 version: 2.1
 jobs:
   checkout:
-    machine:
-      image: ubuntu-1604:202007-01
+    docker:
+      - image: kernelci/build-gcc-8_x86:latest
     working_directory: ~/build
     steps:
       - checkout
@@ -38,8 +38,40 @@ jobs:
             - linux-stable
             - pristine
             - patches
+  flow:
+    docker:
+      - image: kernelci/build-gcc-8_x86:latest
+    working_directory: ~/build
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: 'apt-get update -qq --allow-releaseinfo-change'
+      - run: 'apt-get install -y sudo rpm cpio'
+      - run: 'apt-get install -y build-essential rsync libtool libncurses5-dev libncursesw5-dev bc pkg-config zsh libelf-dev bison flex'
+      - run: 'make config_circle'
+      - run: 'make compile'
+  flow_off:
+    docker:
+      - image: kernelci/build-gcc-8_x86:latest
+    working_directory: ~/build
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: 'apt-get update -qq --allow-releaseinfo-change'
+      - run: 'apt-get install -y sudo rpm cpio'
+      - run: 'apt-get install -y build-essential rsync libtool libncurses5-dev libncursesw5-dev bc pkg-config zsh libelf-dev bison flex'
+      - run: 'make config_circle_off'
+      - run: 'make compile'
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - checkout
+      - flow:
+          requires:
+            - checkout
+      - flow_off:
+          requires:
+            - checkout
