@@ -64,6 +64,17 @@ jobs:
       - run: 'apt-get install -y build-essential rsync libtool libncurses5-dev libncursesw5-dev bc pkg-config zsh libelf-dev bison flex'
       - run: 'make config_circle_off'
       - run: 'make compile'
+  test_patch:
+    docker:
+      - image: kernelci/build-gcc-8_x86:latest
+    working_directory: ~/build
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/build
+      - run: 'apt-get update -qq --allow-releaseinfo-change'
+      - run: 'apt-get install -y git'
+      - run: 'make test_patch'
   publish-github-release:
     docker:
       - image: circleci/golang
@@ -89,6 +100,10 @@ workflows:
       - flow_off:
           requires:
             - checkout
+      - test_patch:
+          requires:
+            - flow
+            - flow_off
       - publish-github-release:
           requires:
             - checkout

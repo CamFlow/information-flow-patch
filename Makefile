@@ -99,5 +99,4 @@ patch: copy_change
 	cp -f ~/build/linux-stable/*.patch ~/build/patches/
 
 test_patch:
-	cp -f ./patches/0001-information-flow.patch ~/build/0001-information-flow.patch
-	cd ~/build/pristine/linux-stable && git apply ../../0001-information-flow.patch
+	cd ~/build/pristine/linux-stable && git apply ~/build/patches/0001-information-flow.patch
