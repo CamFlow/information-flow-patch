@@ -88,6 +88,8 @@ workflows:
           requires:
             - checkout
       - publish-github-release:
-          requires:
-            - flow
-            - flow_off
+          filters:
+            tags:
+              only: /*/
+            branches:
+              ignore: /.*/
