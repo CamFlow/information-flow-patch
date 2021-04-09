@@ -64,6 +64,18 @@ jobs:
       - run: 'apt-get install -y build-essential rsync libtool libncurses5-dev libncursesw5-dev bc pkg-config zsh libelf-dev bison flex'
       - run: 'make config_circle_off'
       - run: 'make compile'
+  publish-github-release:
+    docker:
+      - image: circleci/golang:1.8
+    steps:
+      - attach_workspace:
+          at: ~/build
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get github.com/tcnksm/ghr
+            VERSION=$(cat patches/version)
+            ghr -t ${GH_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./patches/
 workflows:
   version: 2
   build-and-deploy:
@@ -75,3 +87,12 @@ workflows:
       - flow_off:
           requires:
             - checkout
+      - publish-github-release:
+          requires:
+            - flow
+            - flow_off
+          filters:
+            branches:
+                ignore: /.*/
+            tags:
+                only: /^\d+\.\d+\.\d+$/

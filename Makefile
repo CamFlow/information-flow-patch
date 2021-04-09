@@ -71,7 +71,7 @@ install: install_kernel
 install_kernel:
 	cd ~/build/linux-stable && sudo $(MAKE) modules_install
 	cd ~/build/linux-stable && sudo $(MAKE) install
-	cd ~/build/linux-stable && sudo cp -f .config /boot/config-$(kernel-version)heck
+	cd ~/build/linux-stable && sudo cp -f .config /boot/config-$(kernel-version)
 
 clean: clean_kernel
 
@@ -98,6 +98,8 @@ patch: copy_change
 	rm -f ~/build/0001-information-flow.patch
 	mkdir -p patches
 	cp -f ~/build/linux-stable/*.patch patches/
+	rm -f patches/version
+	echo $(kernel-version) > patches/version
 
 test_patch:
 	cp -f ./patches/0001-information-flow.patch ~/build/0001-information-flow.patch
