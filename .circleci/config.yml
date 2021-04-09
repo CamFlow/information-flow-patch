@@ -16,10 +16,10 @@ jobs:
               echo 'Build environment was cached.'
             else
               echo 'Build environment was not cached.'
-              sudo apt-get update -qq
-              sudo apt-get install -y apt-utils
-              sudo apt-get install -y sudo
-              sudo apt-get install -y git
+              apt-get update -qq
+              apt-get install -y apt-utils
+              apt-get install -y sudo
+              apt-get install -y git
               git config --global user.email $GH_EMAIL
               git config --global user.name $GH_NAME
               make prepare_kernel
