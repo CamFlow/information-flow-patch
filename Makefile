@@ -97,7 +97,6 @@ patch: copy_change
 	cd ~/build/linux-stable && git format-patch HEAD~ -s
 	mkdir -p ~/build/patches
 	cp -f ~/build/linux-stable/*.patch ~/build/patches/
-	echo $(kernel-version) > ~/build/patches/version
 
 test_patch:
 	cp -f ./patches/0001-information-flow.patch ~/build/0001-information-flow.patch
