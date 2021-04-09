@@ -90,6 +90,6 @@ workflows:
       - publish-github-release:
           filters:
             tags:
-              only: /*/
+              only: /test*/
             branches:
               ignore: /.*/
