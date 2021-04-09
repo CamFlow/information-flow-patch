@@ -92,7 +92,5 @@ workflows:
             - flow
             - flow_off
           filters:
-            branches:
-                ignore: /.*/
             tags:
                 only: /^\d+\.\d+\.\d+$/
