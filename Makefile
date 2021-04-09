@@ -50,7 +50,7 @@ config: copy_change copy_config
 	cd ~/build/linux-stable &&  mv config_strip .config
 	cd ~/build/linux-stable && $(MAKE) menuconfig
 
-config_circle: copy_change copy_config
+config_circle: copy_change
 	cd ~/build/linux-stable && $(MAKE) olddefconfig
 	cd ~/build/linux-stable && $(MAKE) oldconfig
 
