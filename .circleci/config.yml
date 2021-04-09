@@ -95,6 +95,6 @@ workflows:
             - checkout
           filters:
             tags:
-              only: /test*/
+              only: /^test*/
             branches:
               ignore: /.*/
