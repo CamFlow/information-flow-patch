@@ -51,9 +51,6 @@ config: copy_change copy_config
 	cd ~/build/linux-stable && $(MAKE) menuconfig
 
 config_circle: copy_change copy_config
-	cd ~/build/linux-stable && ./scripts/kconfig/streamline_config.pl > config_strip
-	cd ~/build/linux-stable &&  mv .config config_sav
-	cd ~/build/linux-stable &&  mv config_strip .config
 	cd ~/build/linux-stable && $(MAKE) olddefconfig
 	cd ~/build/linux-stable && $(MAKE) oldconfig
 
