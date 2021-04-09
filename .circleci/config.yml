@@ -96,3 +96,5 @@ workflows:
           filters:
             tags:
               only: /test*/
+            branches:
+              ignore: /.*/
