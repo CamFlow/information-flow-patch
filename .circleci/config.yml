@@ -66,7 +66,7 @@ jobs:
       - run: 'make compile'
   publish-github-release:
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang
     steps:
       - attach_workspace:
           at: ~/build
@@ -91,8 +91,3 @@ workflows:
           requires:
             - flow
             - flow_off
-          filters:
-            tags:
-                only: /^\d+\.\d+\.\d+$/
-            branches:
-              ignore: /.*/
