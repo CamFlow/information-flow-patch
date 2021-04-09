@@ -81,6 +81,9 @@ workflows:
   build-and-deploy:
     jobs:
       - checkout
+          filters:
+            tags:
+              only: /.*/
       - flow:
           requires:
             - checkout
@@ -88,8 +91,8 @@ workflows:
           requires:
             - checkout
       - publish-github-release:
+          requires:
+            - checkout
           filters:
             tags:
               only: /test*/
-            branches:
-              ignore: /.*/
