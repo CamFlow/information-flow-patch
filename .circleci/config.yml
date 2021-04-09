@@ -23,6 +23,7 @@ jobs:
               git config --global user.email $GH_EMAIL
               git config --global user.name $GH_NAME
               make prepare_kernel
+              make patch
             fi
             ls
       - save_cache:
@@ -30,11 +31,13 @@ jobs:
           paths:
             - linux-stable
             - pristine
+            - patches
       - persist_to_workspace:
           root: .
           paths:
             - linux-stable
             - pristine
+            - patches
 workflows:
   version: 2
   build-and-deploy:
