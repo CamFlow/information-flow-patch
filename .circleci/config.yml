@@ -112,3 +112,27 @@ workflows:
               ignore: /test/
             branches:
               ignore: /.*/
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+    jobs:
+      - checkout:
+          filters:
+            tags:
+              only: /.*/
+      - flow:
+          requires:
+            - checkout
+      - flow_off:
+          requires:
+            - checkout
+      - test_patch:
+          requires:
+            - flow
+            - flow_off
